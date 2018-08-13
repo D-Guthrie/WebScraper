@@ -31,5 +31,22 @@ last_page = page_numbers[1]
 # empty list to hold scrapped content
 web_content_list = []
 
+for currPage in range(int(start_page),int(last_page)+1):
+    
+    url = targetSite + "catalogue/page-" + str(currPage) + "/.html"
+    r = requests.get(url)
+    c = r.content
+    soup = BeautifulSoup(c,"html.parser")
+    
+    product_pod = soup.find_all("article",{"class":"product_pod"})
+    
+    book_pod_dict = {}
+    
+    for item_pod in zip(product_pod):
+        book_pod_dict["Title"] = item_pod.find("a", {"title"}.text)
+        book_pod_dict["Price"] = item_pod.find("p", {"class":"price_color"}.text)
+    web_content_list.append(book_pod_dict)
+    
+df = pd.DataFrame(web_content_list)
 
-
+df.to_csv("Output.csv")
