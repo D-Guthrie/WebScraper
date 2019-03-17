@@ -2,17 +2,19 @@
 # -*- coding: utf-8 -*-
 """
 Web Scrapper
- - from tutorial:
-     https://towardsdatascience.com/an-introduction-to-web-scraping-with-python-bc9563fe8860
-
 @author: David Guthrie
 """
 
+# TODO: Review and clean up imports
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import re
+import urllib.request
+from urllib.error import URLError, HTTPError, ContentTooShortError
 
+# Site to target for scraping
+# This should probably be either set in a config file, or input at runtime
 targetSite = "http://books.toscrape.com/"
 
 r = requests.get(targetSite)
@@ -50,3 +52,8 @@ for currPage in range(int(start_page),int(last_page)+1):
 df = pd.DataFrame(web_content_list)
 
 df.to_csv("Output.csv")
+
+# TODO: Finish web page downloader function
+def downloader(url, user_agent = '', num_retries = 2, charSet = 'utf-8'):
+    print('Downloading from:', url)
+    request = urllib.request.Request(url)
