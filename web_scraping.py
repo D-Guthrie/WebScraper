@@ -17,10 +17,16 @@ from urllib.error import URLError, HTTPError, ContentTooShortError
 # This should probably be either set in a config file, or input at runtime
 targetSite = "http://books.toscrape.com/"
 
+SLEEP_TIME = 1
+
+# look at what is in here
 r = requests.get(targetSite)
+
+# look at what is in here
 c = r.content
 
 soup = BeautifulSoup(c,"html.parser")
+time.sleep(SLEEP_TIME)
 
 # extract first and last page numbers
 paging = soup.find("ul",{"class":"pager"}).find_all("li",{"class":"current"})
@@ -54,6 +60,12 @@ df = pd.DataFrame(web_content_list)
 df.to_csv("Output.csv")
 
 # TODO: Finish web page downloader function
-def downloader(url, user_agent = '', num_retries = 2, charSet = 'utf-8'):
-    print('Downloading from:', url)
-    request = urllib.request.Request(url)
+def download(targetSite):
+    print('Downloading:', url)
+    try:
+        # look at urllib
+        html = urllib.request.urlopen(targetSite).read()
+    except (URLError, HTTPError, ContentTooShortError) as e:
+        print('Download error:', e.reason)
+        html = None
+    return html
