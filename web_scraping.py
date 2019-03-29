@@ -14,6 +14,26 @@ from urllib.error import URLError, HTTPError, ContentTooShortError
 # TODO: Update to read target site from a file
 targetSite = "http://books.toscrape.com/"
 
+# Connet to site, get site conntent, disconnect
+def downloadSite(url):
+    print('Connection to:', url)
+    try:
+        siteConnection = urlopen(url)
+        print('Downloading...')
+        html = siteConnection.read()
+    except (URLError, HTTPError, ContentTooShortError) as e:
+        print('Download error:', e.reason)
+        html = None
+    finally:
+        # FIXME: Errors out when no connection: "UnboundLocalError: local 
+        #                                 variable 'siteConnection' referenced 
+        #                                 before assignment"
+        if siteConnection != None:
+            print('Closing connection...')
+            siteConnection.close()
+            print('Disconnected')
+    return html
+
 site_html = downloadSite(targetSite)
 
 site_soup = bSoup(site_html, "html.parser")
@@ -22,16 +42,5 @@ site_soup = bSoup(site_html, "html.parser")
 containers = site_soup.find_all("article",{"class":"product_pod"})
 
 
-# Connet to site, get site conntent, disconnect
-def downloadSite(url):
-    print('Downloading:', url)
-    try:
-		siteConnection = urlopen(url)
-        html = siteConnection.read()
-    except (URLError, HTTPError, ContentTooShortError) as e:
-        print('Download error:', e.reason)
-        html = None
-	finally:
-		siteConnection.close()
-    return html
+
 
