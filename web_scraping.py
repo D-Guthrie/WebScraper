@@ -14,7 +14,7 @@ from urllib.error import URLError, HTTPError, ContentTooShortError
 # TODO: Update to read target site from a file
 targetSite = "http://books.toscrape.com/"
 
-# Connet to site, get site conntent, disconnect
+# Connectt to site, get site content, disconnect
 def downloadSite(url):
     print('Connection to:', url)
     try:
@@ -24,14 +24,10 @@ def downloadSite(url):
     except (URLError, HTTPError, ContentTooShortError) as e:
         print('Download error:', e.reason)
         html = None
-    finally:
-        # FIXME: Errors out when no connection: "UnboundLocalError: local 
-        #                                 variable 'siteConnection' referenced 
-        #                                 before assignment"
-        if siteConnection != None:
-            print('Closing connection...')
-            siteConnection.close()
-            print('Disconnected')
+    else:
+        print('Closing connection...')
+        siteConnection.close()
+        print('Disconnected')
     return html
 
 site_html = downloadSite(targetSite)
